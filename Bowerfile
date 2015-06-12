@@ -1,0 +1,8 @@
+asset 'angular'
+asset 'angular-resource'
+asset 'angular-route'
+asset 'angular-utils-pagination'
+asset 'moment'
+asset 'foundation'
+asset 'foundation-datepicker'
+asset 'font-awesome'

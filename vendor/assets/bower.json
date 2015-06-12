@@ -1,0 +1,13 @@
+{
+  "name": "dsl-generated dependencies",
+  "dependencies": {
+    "angular": "latest",
+    "angular-resource": "latest",
+    "angular-route": "latest",
+    "angular-utils-pagination": "latest",
+    "moment": "latest",
+    "foundation": "latest",
+    "foundation-datepicker": "latest",
+    "font-awesome": "latest"
+  }
+}

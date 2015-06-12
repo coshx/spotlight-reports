@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="small-12 medium-8 columns">
+    <p>The following teachers have at least one published course within Canvas. Click a teacher's name to view aggregated statistics about that teacher's courses.</p>
+
+    <h2>{{school_name}}</h2>
+
+    <input type="search" ng-model="q" placeholder="filter teachers..." aria-label="filter teachers" />
+
+    <div ng-if="status.dataLoading">LOADING</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Teacher</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr dir-paginate="teacher in teachers | orderBy: 'sortable_name' | filter:q | itemsPerPage: 10">
+          <td><a href="/teacher/{{teacher.id}}">{{teacher.sortable_name}}</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <dir-pagination-controls></dir-pagination-controls>
+  </div>
+</div>

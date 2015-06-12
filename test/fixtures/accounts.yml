@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  canvas_id: 1
+  name: MyString
+
+two:
+  canvas_id: 1
+  name: MyString
