@@ -60,7 +60,7 @@ class LtiController < ApplicationController
     url = (params['signature_proxy_test'] ? host + "/signature_test" : host + "/lti_tool")
     tc = IMS::LTI::ToolConfig.new(:title => "Example Sinatra Tool Provider", :launch_url => url)
     tc.description = "This example LTI Tool Provider supports LIS Outcome pass-back."
-    tc.set_ext_params "canvas.instructure.com", {:privacy_level => "public", :domain => "TBD", :text => "Teacher Insight"}
+    tc.set_ext_params "canvas.instructure.com", {:privacy_level => "public", :domain => "TBD", :text => "Spotlight Reports"}
 
     tc.extend IMS::LTI::Extensions::Canvas::ToolConfig
     tc.canvas_account_navigation!({:enabled => "true"})
