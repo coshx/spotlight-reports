@@ -1,6 +1,6 @@
-teacherInsights = angular.module('teacherInsights',['templates', 'ngRoute', 'controllers', 'angularUtils.directives.dirPagination'])
+spotlightReports = angular.module('spotlightReports',['templates', 'ngRoute', 'controllers', 'angularUtils.directives.dirPagination'])
 
-teacherInsights.config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) ->
+spotlightReports.config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) ->
   $routeProvider
     .when('/',
       templateUrl: "index.html"
@@ -25,7 +25,7 @@ controllers.controller('SchoolController', [ '$scope', '$routeParams', 'School',
       $scope.status.dataLoading = false
 ])
 
-teacherInsights.factory('School', ['$http', ($http) ->
+spotlightReports.factory('School', ['$http', ($http) ->
   teachers = {}
   teachers.getTeachers = (school_id) ->
     $http.get('/school/'+ school_id)
@@ -96,14 +96,14 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
       )
 ])
 
-teacherInsights.factory('Teacher', ['$http', ($http) ->
+spotlightReports.factory('Teacher', ['$http', ($http) ->
   teacherDetails = {}
   teacherDetails.getTeacherDetails = (teacher_id) ->
     $http.get('/teacher_details/' + teacher_id)
   return teacherDetails
 ])
 
-teacherInsights.directive 'pageviewsChart', [ ->
+spotlightReports.directive 'pageviewsChart', [ ->
   restrict: "A"
   link: (scope, element, attrs) ->
     renderChart = ->
@@ -129,7 +129,7 @@ teacherInsights.directive 'pageviewsChart', [ ->
       renderChart()
 ]
 
-teacherInsights.directive 'participationsChart', [ ->
+spotlightReports.directive 'participationsChart', [ ->
   restrict: "A"
   link: (scope, element, attrs) ->
     renderChart = ->
@@ -155,7 +155,7 @@ teacherInsights.directive 'participationsChart', [ ->
       renderChart()
 ]
 
-teacherInsights.directive 'datePicker', ->
+spotlightReports.directive 'datePicker', ->
   restrict: "A"
   link: (scope, element, attrs) ->
     element.fdatepicker(format: 'yyyy-mm-dd')
