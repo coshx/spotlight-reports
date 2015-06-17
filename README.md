@@ -62,3 +62,6 @@ rake populate_database
 ```
 
 Once all those steps are done, you should be able to go to a sub-account, click Spotlight Reports, and see a list of teachers with published courses.
+
+## Deployment
+You can deploy this on Heroku pretty easily. Just add the contents of `canvas.yml` as environment variables. Run the `populate_database` task upon intial deployment and use Heroku Scheduler to run it each night so the db knows of any new teachers.
