@@ -50,13 +50,20 @@ task populate_database: :environment do
     teachers.flatten!.uniq!{|t| t.id}
 
     teachers.each do |teacher|
-      Teacher.create(
-        canvas_id: teacher.id,
-        name: teacher.name,
-        sortable_name: teacher.sortable_name,
-        avatar_url: teacher.avatar_url,
-        school_account: sub_account.id
-        )
+      begin
+        teacher_avatar_url = client.show_user_details(teacher.id).avatar_url
+        teacher_email = client.get_user_profile(teacher.id).primary_email
+
+        Teacher.create(
+          canvas_id: teacher.id,
+          name: teacher.name,
+          sortable_name: teacher.sortable_name,
+          avatar_url: teacher_avatar_url,
+          email: teacher_email,
+          school_account: sub_account.id
+          )
+      rescue
+      end
     end
   end
 end

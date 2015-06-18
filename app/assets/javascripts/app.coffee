@@ -39,6 +39,7 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.teacherDetails = (teacherData)
     for course_id, course_object of $scope.teacherDetails.courses
       course_object.selected = true
+    console.log $scope.teacherDetails
   .finally ->
     $scope.dates = dates()
     $scope.start_date = $scope.dates[0]

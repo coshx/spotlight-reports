@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         <tr dir-paginate="teacher in teachers | orderBy: 'sortable_name' | filter:q | itemsPerPage: 10">
-          <td><a href="/teacher/{{teacher.id}}">{{teacher.sortable_name}}</a></td>
+          <td><a href="/teacher/{{teacher.canvas_id}}">{{teacher.sortable_name}}</a></td>
         </tr>
       </tbody>
     </table>
