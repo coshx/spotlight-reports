@@ -46,6 +46,8 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.end_date = $scope.dates[$scope.dates.length - 1]
     $scope.pageViews = addPageViews()
     $scope.participations = addParticipations()
+    $scope.stats = addStats()
+    console.log $scope.stats
     $scope.status.dataLoading = false
     $scope.$watchGroup ['start_date', 'end_date'], ->
       updateGraphs()
@@ -57,9 +59,20 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     updateDateRange()
     $scope.pageViews = addPageViews()
     $scope.participations = addParticipations()
+    $scope.stats = addStats()
 
   updateDateRange = ->
     $scope.dates = (date for date in $scope.dates when (moment(date).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day"))))
+
+  addStats = ->
+    stats = {discussions:0, files:0, assignments:0}
+    for course_id, course_object of $scope.teacherDetails.statgrid when $scope.teacherDetails.courses[course_id].selected == true
+      for date_id, date_object of course_object when (moment(date_id).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day")))
+        stats.discussions += date_object.discussions
+        stats.files += date_object.files
+        stats.assignments += date_object.assignments
+    stats
+
 
   addParticipations = ->
     participations = []

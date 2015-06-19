@@ -21,7 +21,9 @@ class TeachersController < ApplicationController
     courses_hash = Hash[ courses.map { |course| [course.canvas_id, course] } ]
     course_data = teacher.get_course_data(courses)
 
-    render json: {teacher: teacher, courses: courses_hash, course_analytics: course_data}
+    statgrid_data = teacher.compile_statgrid_data(courses)
+
+    render json: {teacher: teacher, courses: courses_hash, course_analytics: course_data, statgrid: statgrid_data }
   end
 
 end

@@ -28,6 +28,18 @@
       </div>
     </form>
 
+    <div class="row">
+      <div class="small-12 columns">
+        <table>
+          <thead>
+            <tr>
+              <th ng-repeat="(statName, stat) in stats">{{stat}}</br>{{statName | uppercase}}</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+
 
     <div pageviews_chart="true"></div>
     <div participations_chart="true"></div>
