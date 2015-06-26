@@ -39,7 +39,6 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.teacherDetails = (teacherData)
     for course_id, course_object of $scope.teacherDetails.courses
       course_object.selected = true
-    console.log $scope.teacherDetails
   .finally ->
     $scope.dates = dates()
     $scope.start_date = $scope.dates[0]
@@ -65,12 +64,13 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.dates = (date for date in $scope.dates when (moment(date).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day"))))
 
   addStats = ->
-    stats = {discussions:0, files:0, assignments:0}
+    stats = {discussions:0, files:0, assignments:0, grades:0}
     for course_id, course_object of $scope.teacherDetails.statgrid when $scope.teacherDetails.courses[course_id].selected == true
       for date_id, date_object of course_object when (moment(date_id).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day")))
-        stats.discussions += date_object.discussions
-        stats.files += date_object.files
-        stats.assignments += date_object.assignments
+        stats.discussions += parseInt(date_object.discussions) unless date_object.discussions == null
+        stats.files += parseInt(date_object.files) unless date_object.files == null
+        stats.assignments += parseInt(date_object.assignments) unless date_object.assignments == null
+        stats.grades += parseInt(date_object.gradesEntered) unless date_object.gradesEntered == null
     stats
 
 

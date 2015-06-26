@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601190306) do
+ActiveRecord::Schema.define(version: 20150626153717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "accounts", force: :cascade do |t|
     t.integer  "canvas_id"
@@ -27,8 +28,12 @@ ActiveRecord::Schema.define(version: 20150601190306) do
     t.integer  "canvas_id"
     t.integer  "account_id"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.hstore   "discussions"
+    t.hstore   "files"
+    t.hstore   "assignments"
+    t.hstore   "grades"
   end
 
   create_table "teachers", force: :cascade do |t|
@@ -41,6 +46,11 @@ ActiveRecord::Schema.define(version: 20150601190306) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "school_account"
+  end
+
+  create_table "tools", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
