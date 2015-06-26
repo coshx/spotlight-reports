@@ -40,13 +40,13 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     for course_id, course_object of $scope.teacherDetails.courses
       course_object.selected = true
   .finally ->
-    $scope.dates = dates()
-    $scope.start_date = $scope.dates[0]
-    $scope.end_date = $scope.dates[$scope.dates.length - 1]
+    $scope.allDates = dates()
+    $scope.selectedDates = $scope.allDates
+    $scope.start_date = $scope.allDates[0]
+    $scope.end_date = $scope.allDates[$scope.allDates.length - 1]
     $scope.pageViews = addPageViews()
     $scope.participations = addParticipations()
     $scope.stats = addStats()
-    console.log $scope.stats
     $scope.status.dataLoading = false
     $scope.$watchGroup ['start_date', 'end_date'], ->
       updateGraphs()
@@ -61,7 +61,7 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.stats = addStats()
 
   updateDateRange = ->
-    $scope.dates = (date for date in $scope.dates when (moment(date).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day"))))
+    $scope.selectedDates = (date for date in $scope.allDates when (moment(date).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day"))))
 
   addStats = ->
     stats = {discussions:0, files:0, assignments:0, grades:0}
@@ -77,7 +77,7 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
   addParticipations = ->
     participations = []
     index = 0
-    for date in $scope.dates
+    for date in $scope.selectedDates
       participations[index] = 0
       for course_id, course_object of $scope.teacherDetails.course_analytics when $scope.teacherDetails.courses[course_id].selected == true
         for stat in course_object
@@ -89,7 +89,7 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
   addPageViews = ->
     pageViews = []
     index = 0
-    for date in $scope.dates
+    for date in $scope.selectedDates
       pageViews[index] = 0
       for course_id, course_object of $scope.teacherDetails.course_analytics when $scope.teacherDetails.courses[course_id].selected == true
         for stat in course_object
@@ -127,7 +127,7 @@ spotlightReports.directive 'pageviewsChart', [ ->
         title:
           text: 'Pageviews'
         xAxis:
-          categories: scope.dates
+          categories: scope.selectedDates
         yAxis:
           title:
             text: 'Number'
@@ -153,7 +153,7 @@ spotlightReports.directive 'participationsChart', [ ->
         title:
           text: 'Participations'
         xAxis:
-          categories: scope.dates
+          categories: scope.selectedDates
         yAxis:
           title:
             text: 'Number'
