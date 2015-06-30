@@ -12,6 +12,7 @@ class TeachersController < ApplicationController
 
   def get_teacher_details
     teacher = Teacher.where(canvas_id: params[:id]).first
+    days_since_last_access = teacher.days_since_last_access
     courses = teacher.get_courses
 
     courses_hash = Hash[ courses.map { |course| [course.canvas_id, course] } ]
@@ -19,7 +20,13 @@ class TeachersController < ApplicationController
 
     statgrid_data = teacher.compile_statgrid_data(courses)
 
-    render json: {teacher: teacher, courses: courses_hash, course_analytics: course_data, statgrid: statgrid_data }
+    render json: {
+      teacher: teacher,
+      days_since_last_access: days_since_last_access,
+      courses: courses_hash,
+      course_analytics: course_data,
+      statgrid: statgrid_data
+    }
   end
 
   private

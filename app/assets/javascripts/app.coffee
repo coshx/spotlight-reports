@@ -32,6 +32,13 @@ spotlightReports.factory('School', ['$http', ($http) ->
   return teachers
 ])
 
+spotlightReports.factory('Teacher', ['$http', ($http) ->
+  teacherDetails = {}
+  teacherDetails.getTeacherDetails = (teacher_id) ->
+    $http.get('/teacher_details/' + teacher_id)
+  return teacherDetails
+])
+
 controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', ($scope, $routeParams, Teacher) ->
   $scope.status = {}
   $scope.status.dataLoading = true
@@ -108,13 +115,6 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     dates.sort( (a,b) ->
         moment(a) - moment(b)
       )
-])
-
-spotlightReports.factory('Teacher', ['$http', ($http) ->
-  teacherDetails = {}
-  teacherDetails.getTeacherDetails = (teacher_id) ->
-    $http.get('/teacher_details/' + teacher_id)
-  return teacherDetails
 ])
 
 spotlightReports.directive 'pageviewsChart', [ ->

@@ -18,4 +18,10 @@ class Teacher < ActiveRecord::Base
     Hash[ courses.map { |course| [ course.canvas_id, course.compile_statgrid_data_single_course ] } ]
   end
 
+  def days_since_last_access
+    return "No data" if canvas_api.list_user_page_views(canvas_id).first.nil?
+    last_access = canvas_api.list_user_page_views(canvas_id).first.created_at
+    (Date.today - last_access).to_i
+  end
+
 end

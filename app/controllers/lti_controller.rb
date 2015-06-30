@@ -59,7 +59,7 @@ class LtiController < ApplicationController
     host = request.scheme + "://" + request.host_with_port
     url = (params['signature_proxy_test'] ? host + "/signature_test" : host + "/lti_tool")
     tc = IMS::LTI::ToolConfig.new(:title => "Spotlight Reports", :launch_url => url)
-    tc.description = "Analytics reports for princicples."
+    tc.description = "Analytics reports for principles."
     tc.set_ext_params "canvas.instructure.com", {:privacy_level => "public", :domain => "TBD", :text => "Spotlight Reports"}
 
     tc.extend IMS::LTI::Extensions::Canvas::ToolConfig
