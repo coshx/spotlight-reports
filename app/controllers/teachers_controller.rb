@@ -9,6 +9,23 @@ class TeachersController < ApplicationController
     render json: Teacher.where(school_account: params[:id]).to_json
   end
 
+  def get_course_graph_data
+    teacher = Teacher.where(canvas_id: params[:id]).first
+    courses = teacher.get_courses
+    render json: teacher.get_course_data(courses)
+  end
+
+  def get_course_grid_data
+    teacher = Teacher.where(canvas_id: params[:id]).first
+    courses = teacher.get_courses
+    render json: teacher.compile_statgrid_data(courses)
+  end
+
+  def get_student_grid_data
+    teacher = Teacher.where(canvas_id: params[:id]).first
+    courses = teacher.get_courses
+    render json: teacher.get_student_data(courses)
+  end
 
   def get_teacher_details
     teacher = Teacher.where(canvas_id: params[:id]).first
@@ -16,18 +33,15 @@ class TeachersController < ApplicationController
     courses = teacher.get_courses
 
     courses_hash = Hash[ courses.map { |course| [course.canvas_id, course] } ]
-    course_data = teacher.get_course_data(courses)
-
-    statgrid_data = teacher.compile_statgrid_data(courses)
 
     render json: {
       teacher: teacher,
       days_since_last_access: days_since_last_access,
-      courses: courses_hash,
-      course_analytics: course_data,
-      statgrid: statgrid_data
+      courses: courses_hash
     }
   end
+
+
 
   private
 

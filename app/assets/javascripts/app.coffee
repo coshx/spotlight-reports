@@ -39,13 +39,42 @@ spotlightReports.factory('Teacher', ['$http', ($http) ->
   return teacherDetails
 ])
 
-controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', ($scope, $routeParams, Teacher) ->
+spotlightReports.factory('CourseGraphs', ['$http', ($http) ->
+  courseGraphs = {}
+  courseGraphs.getGraphData = (teacher_id) ->
+    $http.get('/course_graph_data/' + teacher_id)
+  return courseGraphs
+])
+
+spotlightReports.factory('GridData', ['$http', ($http) ->
+  statGrid = {}
+  statGrid.getStatGridData = (teacher_id) ->
+    $http.get('/course_grid_data/' + teacher_id)
+  return statGrid
+])
+
+spotlightReports.factory('GridStudentData', ['$http', ($http) ->
+  studentData = {}
+  studentData.getStudentData = (teacher_id) ->
+    $http.get('/course_student_data/' + teacher_id)
+  return studentData
+])
+
+controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', 'CourseGraphs', 'GridData', 'GridStudentData', ($scope, $routeParams, Teacher, CourseGraphs, GridData, GridStudentData) ->
   $scope.status = {}
   $scope.status.dataLoading = true
   Teacher.getTeacherDetails($routeParams.id).success (teacherData) ->
     $scope.teacherDetails = (teacherData)
     for course_id, course_object of $scope.teacherDetails.courses
       course_object.selected = true
+  .then ->
+    CourseGraphs.getGraphData($routeParams.id).success (graphData) ->
+      $scope.teacherDetails.course_analytics = (graphData)
+    GridData.getStatGridData($routeParams.id).success (gridData) ->
+      $scope.teacherDetails.statgrid = (gridData)
+  .then ->
+    GridStudentData.getStudentData($routeParams.id).success (studentData) ->
+      $scope.teacherDetails.studentData = studentData
   .finally ->
     $scope.allDates = dates()
     $scope.selectedDates = $scope.allDates
@@ -71,13 +100,26 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.selectedDates = (date for date in $scope.allDates when (moment(date).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day"))))
 
   addStats = ->
-    stats = {discussions:0, files:0, assignments:0, grades:0}
+    stats = {discussions:0, files:0, assignments:0, grades:0, student_participation:0, student_access:0}
     for course_id, course_object of $scope.teacherDetails.statgrid when $scope.teacherDetails.courses[course_id].selected == true
       for date_id, date_object of course_object when (moment(date_id).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day")))
         stats.discussions += parseInt(date_object.discussions) unless date_object.discussions == null
         stats.files += parseInt(date_object.files) unless date_object.files == null
         stats.assignments += parseInt(date_object.assignments) unless date_object.assignments == null
         stats.grades += parseInt(date_object.gradesEntered) unless date_object.gradesEntered == null
+
+    students = 0
+    students_participated = 0
+    students_accessed = 0
+
+    for course_id, course_object of $scope.teacherDetails.studentData when $scope.teacherDetails.courses[course_id].selected == true
+      for student_id, student_object of course_object
+        students += 1
+        students_participated += 1 if student_object.participations.length > 0
+        students_accessed += 1 if student_object.page_views.length > 0
+
+    stats.student_participation = Math.round(students_participated/students * 100) + "%"
+    stats.student_access = Math.round(students_accessed/students * 100) + "%"
     stats
 
 
