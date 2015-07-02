@@ -29,7 +29,6 @@ class Teacher < ActiveRecord::Base
         next if student_data.keys.include?("errors")
         student_data["page_views"].nil? ? student_hash["page_views"] = [] : student_hash["page_views"] = student_data["page_views"].keys
         student_data["participations"].nil? ? student_hash["participations"] = [] : student_hash["participations"] = student_data["participations"].map {|p| p["created_at"]}
-        puts student_hash
         student_data_by_course[course.canvas_id][student_id] = student_hash
       end
     end
