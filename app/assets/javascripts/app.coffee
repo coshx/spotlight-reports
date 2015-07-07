@@ -100,13 +100,13 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.selectedDates = (date for date in $scope.allDates when (moment(date).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day"))))
 
   addStats = ->
-    stats = {discussions:0, files:0, assignments:0, grades:0, student_participation:0, student_access:0}
+    stats = {"Discussion Posts":0, "Files Uploaded":0, "Assignments":0, "Grades Entered":0, "Student Participation":0, "Student Access Average":0}
     for course_id, course_object of $scope.teacherDetails.statgrid when $scope.teacherDetails.courses[course_id].selected == true
       for date_id, date_object of course_object when (moment(date_id).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day")))
-        stats.discussions += parseInt(date_object.discussions) unless date_object.discussions == null
-        stats.files += parseInt(date_object.files) unless date_object.files == null
-        stats.assignments += parseInt(date_object.assignments) unless date_object.assignments == null
-        stats.grades += parseInt(date_object.gradesEntered) unless date_object.gradesEntered == null
+        stats["Discussion Posts"] += parseInt(date_object.discussions) unless date_object.discussions == null
+        stats["Files Uploaded"] += parseInt(date_object.files) unless date_object.files == null
+        stats["Assignments"] += parseInt(date_object.assignments) unless date_object.assignments == null
+        stats["Grades Entered"] += parseInt(date_object.gradesEntered) unless date_object.gradesEntered == null
 
     students = 0
     students_participated = 0
@@ -115,13 +115,16 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     for course_id, course_object of $scope.teacherDetails.studentData when $scope.teacherDetails.courses[course_id].selected == true
       for student_id, student_object of course_object
         students += 1
-        students_participated += 1 if student_object.participations.length > 0
-        students_accessed += 1 if student_object.page_views.length > 0
+        students_participated += 1 if intersection(student_object.participations, $scope.selectedDates)
+        students_accessed += 1 if intersection(student_object.page_views, $scope.selectedDates)
 
-    stats.student_participation = Math.round(students_participated/students * 100) + "%"
-    stats.student_access = Math.round(students_accessed/students * 100) + "%"
+    stats["Student Participation"] = Math.round(students_participated/students * 100) + "%"
+    stats["Student Access Average"] = Math.round(students_accessed/students * 100) + "%"
     stats
 
+  intersection = (a, b) ->
+    [a, b] = [b, a] if a.length > b.length
+    return true for value in a when value in b
 
   addParticipations = ->
     participations = []

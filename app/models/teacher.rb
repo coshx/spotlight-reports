@@ -27,8 +27,8 @@ class Teacher < ActiveRecord::Base
         student_hash = Hash.new(0)
         student_data = HTTParty.get(ENV['API_URL'] + "/v1/courses/#{course.canvas_id.to_s}/analytics/users/#{student_id}/activity?access_token=" + ENV['API_TOKEN']).to_hash
         next if student_data.keys.include?("errors")
-        student_data["page_views"].nil? ? student_hash["page_views"] = [] : student_hash["page_views"] = student_data["page_views"].keys
-        student_data["participations"].nil? ? student_hash["participations"] = [] : student_hash["participations"] = student_data["participations"].map {|p| p["created_at"]}
+        student_data["page_views"].nil? ? student_hash["page_views"] = [] : student_hash["page_views"] = student_data["page_views"].keys.map{|d| d.to_s[0..9]}
+        student_data["participations"].nil? ? student_hash["participations"] = [] : student_hash["participations"] = student_data["participations"].map{|p| p["created_at"]}.map{|d| d.to_s[0..9]}
         student_data_by_course[course.canvas_id][student_id] = student_hash
       end
     end
