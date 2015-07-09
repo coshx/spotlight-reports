@@ -41,6 +41,11 @@ class TeachersController < ApplicationController
     }
   end
 
+  def get_course_grade_data
+    teacher = Teacher.where(canvas_id: params[:id]).first
+    courses = teacher.get_courses
+    render json: teacher.get_grade_data(courses)
+  end
 
 
   private

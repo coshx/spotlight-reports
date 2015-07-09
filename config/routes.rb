@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get '/course_graph_data/:id' => 'teachers#get_course_graph_data'
   get '/course_grid_data/:id' => 'teachers#get_course_grid_data'
   get '/course_student_data/:id' => 'teachers#get_student_grid_data'
+  get '/course_grade_data/:id' => 'teachers#get_course_grade_data'
 
 
   # Example of regular route:

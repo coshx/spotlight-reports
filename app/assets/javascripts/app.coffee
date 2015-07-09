@@ -60,7 +60,14 @@ spotlightReports.factory('GridStudentData', ['$http', ($http) ->
   return studentData
 ])
 
-controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', 'CourseGraphs', 'GridData', 'GridStudentData', ($scope, $routeParams, Teacher, CourseGraphs, GridData, GridStudentData) ->
+spotlightReports.factory('GradeData', ['$http', ($http) ->
+  gradeData = {}
+  gradeData.getGradeData = (teacher_id) ->
+    $http.get('/course_grade_data/' + teacher_id)
+  return  gradeData
+])
+
+controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', 'CourseGraphs', 'GridData', 'GridStudentData', 'GradeData', ($scope, $routeParams, Teacher, CourseGraphs, GridData, GridStudentData, GradeData) ->
   $scope.status = {}
   $scope.status.dataLoading = true
   Teacher.getTeacherDetails($routeParams.id).success (teacherData) ->
@@ -75,6 +82,9 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
   .then ->
     GridStudentData.getStudentData($routeParams.id).success (studentData) ->
       $scope.teacherDetails.studentData = studentData
+  .then ->
+    GradeData.getGradeData($routeParams.id).success (gradeData) ->
+      $scope.teacherDetails.gradeData = gradeData
   .finally ->
     $scope.allDates = dates()
     $scope.selectedDates = $scope.allDates
@@ -100,7 +110,7 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.selectedDates = (date for date in $scope.allDates when (moment(date).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day"))))
 
   addStats = ->
-    stats = {"Discussion Posts":0, "Files Uploaded":0, "Assignments":0, "Grades Entered":0, "Student Participation":0, "Student Access Average":0}
+    stats = {"Discussion Posts":0, "Files Uploaded":0, "Assignments":0, "Grades Entered":0, "Student Participation":"0%", "Student Access Average":"0%", "Student Grades Below 70%":"0%"}
     for course_id, course_object of $scope.teacherDetails.statgrid when $scope.teacherDetails.courses[course_id].selected == true
       for date_id, date_object of course_object when (moment(date_id).isBetween(moment($scope.start_date).subtract(1, "day"), moment($scope.end_date).add(1, "day")))
         stats["Discussion Posts"] += parseInt(date_object.discussions) unless date_object.discussions == null
@@ -119,8 +129,24 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
         students_participated += 1 if intersection(student_data.participations, $scope.selectedDates)
         students_accessed += 1 if intersection(student_data.page_views, $scope.selectedDates)
 
-    stats["Student Participation"] = Math.round(students_participated/students * 100) + "%"
-    stats["Student Access Average"] = Math.round(students_accessed/students * 100) + "%"
+    participation_average = Math.round(students_participated/students * 100)
+    access_average = Math.round(students_accessed/students * 100)
+    stats["Student Participation"] = participation_average + "%" unless isNaN(participation_average)
+    stats["Student Access Average"] = access_average + "%" unless isNaN(access_average)
+
+    total_grades = 0
+    total_grades_below_seventy = 0
+
+    for course_id, course_object of $scope.teacherDetails.gradeData when $scope.teacherDetails.courses[course_id].selected == true
+      for assignment_id, assignment_object of course_object
+        assignment_data = JSON.parse(assignment_object.replace(/=>/g, ':'))
+        for grade in assignment_data.grades
+          total_grades += 1
+          total_grades_below_seventy += 1 if parseInt(grade) / assignment_data.points_possible < .7
+
+    grades_below_seventy_average = Math.round(total_grades_below_seventy/total_grades * 100)
+    stats["Student Grades Below 70%"] = grades_below_seventy_average + "%" unless isNaN(grades_below_seventy_average)
+
     stats
 
   intersection = (a, b) ->

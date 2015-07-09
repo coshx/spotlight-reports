@@ -26,6 +26,14 @@ class Teacher < ActiveRecord::Base
     student_data_by_course
   end
 
+  def get_grade_data(courses)
+    grade_data_by_course = Hash.new(0)
+    courses.each do |course|
+      grade_data_by_course[course.canvas_id] = course.grades_by_assignment
+    end
+    grade_data_by_course
+  end
+
   def days_since_last_access
     return "No data" if canvas_api.list_user_page_views(canvas_id).first.nil?
     last_access = canvas_api.list_user_page_views(canvas_id).first.created_at
