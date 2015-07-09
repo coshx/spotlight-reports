@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150626153717) do
+ActiveRecord::Schema.define(version: 20150708172845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,12 +28,14 @@ ActiveRecord::Schema.define(version: 20150626153717) do
     t.integer  "canvas_id"
     t.integer  "account_id"
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.hstore   "discussions"
     t.hstore   "files"
     t.hstore   "assignments"
     t.hstore   "grades"
+    t.hstore   "participation_and_access"
+    t.hstore   "grades_by_assignment"
   end
 
   create_table "teachers", force: :cascade do |t|

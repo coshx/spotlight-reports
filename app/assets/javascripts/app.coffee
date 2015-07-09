@@ -69,9 +69,9 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
       course_object.selected = true
   .then ->
     CourseGraphs.getGraphData($routeParams.id).success (graphData) ->
-      $scope.teacherDetails.course_analytics = (graphData)
+      $scope.teacherDetails.course_analytics = graphData
     GridData.getStatGridData($routeParams.id).success (gridData) ->
-      $scope.teacherDetails.statgrid = (gridData)
+      $scope.teacherDetails.statgrid = gridData
   .then ->
     GridStudentData.getStudentData($routeParams.id).success (studentData) ->
       $scope.teacherDetails.studentData = studentData
@@ -115,8 +115,9 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     for course_id, course_object of $scope.teacherDetails.studentData when $scope.teacherDetails.courses[course_id].selected == true
       for student_id, student_object of course_object
         students += 1
-        students_participated += 1 if intersection(student_object.participations, $scope.selectedDates)
-        students_accessed += 1 if intersection(student_object.page_views, $scope.selectedDates)
+        student_data = JSON.parse(student_object.replace(/=>/g, ':'))
+        students_participated += 1 if intersection(student_data.participations, $scope.selectedDates)
+        students_accessed += 1 if intersection(student_data.page_views, $scope.selectedDates)
 
     stats["Student Participation"] = Math.round(students_participated/students * 100) + "%"
     stats["Student Access Average"] = Math.round(students_accessed/students * 100) + "%"

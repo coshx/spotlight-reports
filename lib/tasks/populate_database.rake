@@ -41,12 +41,41 @@ task populate_database: :environment do
   def get_grade_changes_by_date(canvas_course_object)
     grade_change_list = HTTParty.get(ENV['API_URL'] + "/v1/audit/grade_change/courses/" + canvas_course_object.id.to_s + "?access_token=" + ENV['API_TOKEN'])["events"]
     dates = []
-    grade_change_list.each { |grade_change| dates << grade_change.created_at.to_s[0..9] }
+    grade_change_list.each { |grade_change| dates << grade_change["created_at"].to_s[0..9] }
     grade_changes_by_date = Hash.new(0)
     dates.each do |date|
       grade_changes_by_date[date] += 1
     end
     grade_changes_by_date
+  end
+
+  def get_grades(canvas_course_object)
+    grades = Hash.new(0)
+    course_grades = HTTParty.get(ENV['API_URL'] + "/v1/audit/grade_change/courses/" + canvas_course_object.id.to_s + "?access_token=" + ENV['API_TOKEN'])
+    course_grades["linked"]["assignments"].each do |assignment|
+      id = assignment["id"]
+      grades[id] = {"points_possible"=> 0, "grades"=> []}
+      grades[id]["points_possible"] = assignment["points_possible"]
+    end
+    course_grades["events"].each do |grade_event|
+      assignment_id = grade_event["links"]["assignment"]
+      grades[assignment_id]["grades"] << grade_event["grade_after"]
+    end
+    grades
+  end
+
+  def get_student_participation_and_access(canvas_course_object)
+    student_data = Hash.new(0)
+    student_ids = @client.list_students(canvas_course_object.id).entries.map {|s| s.id}
+    student_ids.each do |student_id|
+      student_hash = {"page_views"=>[], "participations"=>[]}
+      student_participation_data = HTTParty.get(ENV['API_URL'] + "/v1/courses/#{canvas_course_object.id.to_s}/analytics/users/#{student_id}/activity?access_token=" + ENV['API_TOKEN']).to_hash
+      next if student_participation_data.keys.include?("errors")
+      student_participation_data["page_views"].empty? ? student_hash["page_views"] = [] : student_hash["page_views"] = student_participation_data["page_views"].keys.map{|d| d.to_s[0..9]}
+      student_participation_data["participations"].empty? ? student_hash["participations"] = [] : student_hash["participations"] = student_participation_data["participations"].map{|p| p["created_at"]}.map{|d| d.to_s[0..9]}
+      student_data[student_id] = student_hash
+    end
+    student_data
   end
 
   Account.destroy_all
@@ -84,7 +113,9 @@ task populate_database: :environment do
         discussions: get_discussions_posted_by_date(course),
         files: get_files_uploaded_by_date(course),
         assignments: get_assignments_created_by_date(course),
-        grades: get_grade_changes_by_date(course)
+        grades: get_grade_changes_by_date(course),
+        grades_by_assignment: get_grades(course),
+        participation_and_access: get_student_participation_and_access(course)
         )
       print '.'
     end
