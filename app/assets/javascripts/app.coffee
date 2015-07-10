@@ -98,7 +98,14 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
       updateGraphs()
     $scope.$watch 'teacherDetails.courses', ->
       updateGraphs()
+      $scope.teacherDetails.selectedCourseCount = countSelectedCourses()
     , true
+
+  countSelectedCourses = ->
+    count = 0
+    for course_id, course of $scope.teacherDetails.courses
+      count += 1 if course.selected == true
+    return count
 
   updateGraphs = ->
     updateDateRange()

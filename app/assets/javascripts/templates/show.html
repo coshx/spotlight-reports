@@ -6,28 +6,36 @@
     <p>Email: {{ teacherDetails.teacher.email }}</p>
     <p>Days since last accessed Canvas: {{ teacherDetails.days_since_last_access }}</p>
 
-
-    <p>Courses:</p>
-    <ul>
-      <li ng-repeat="course in teacherDetails.courses">
-        <INPUT type="checkbox" ng-model="course.selected">
-        {{course.name}}
-      </li>
-    </ul>
+    <p><strong>{{ teacherDetails.selectedCourseCount }}</strong> active, published courses</p>
+    <a href="#" data-reveal-id="courseModal">Edit Courses</a>
+    <div id="courseModal" class="reveal-modal" data-reveal aria-labelledby="" aria-hidden="true" role="dialog">
+      <ul>
+        <li ng-repeat="course in teacherDetails.courses">
+          <INPUT type="checkbox" ng-model="course.selected">
+          {{course.name}}
+        </li>
+      </ul>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
   </div>
 
   <div class="small-12 medium-9 columns">
-    <form>
-      <div class="small-6 columns">
-        <strong>Start date:</strong>
-        <INPUT ng-model="start_date" type="text" id="start_date" date-picker>
-      </div>
+    <h3>{{ start_date | date }} to {{ end_date | date }}</h3><a href="#" data-reveal-id="dateRangeModal">Edit Timeframe</a>
+    <div id="dateRangeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+      <h2 id="modalTitle">Edit Timeframe</h2>
+      <form>
+        <div class="small-6 columns">
+          <strong>Start date:</strong>
+          <INPUT ng-model="start_date" type="text" id="start_date" date-picker>
+        </div>
 
-      <div class="small-6 columns">
-        <strong>End date:</strong>
-        <INPUT ng-model="end_date" type="text" id="end_date" date-picker>
-      </div>
-    </form>
+        <div class="small-6 columns">
+          <strong>End date:</strong>
+          <INPUT ng-model="end_date" type="text" id="end_date" date-picker>
+        </div>
+        <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+      </form>
+    </div>
 
     <div class="row">
       <div class="small-12 columns">
@@ -46,3 +54,7 @@
     <div participations_chart="true"></div>
   </div>
 </div>
+
+<script>
+  $(document).foundation();
+</script>

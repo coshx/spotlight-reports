@@ -11,6 +11,8 @@
 // about supported directives.
 //
 //= require jquery
+//= require foundation/js/foundation
+//= require fastclick
 //= require angular/angular
 //= require angular-route/angular-route
 //= require angular-rails-templates
@@ -19,3 +21,7 @@
 //= require moment/moment
 //= require foundation-datepicker/js/foundation-datepicker
 //= require_tree .
+$(function() {
+  $(document).foundation();
+});
+
