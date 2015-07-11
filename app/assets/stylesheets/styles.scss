@@ -2,10 +2,14 @@ table {
   width: 100%;
 }
 
-#show-page {
-  #side-panel {
-    ul {
-      list-style: none;
-    }
-  }
+
+#course-selection {
+  list-style: none;
+}
+
+#profile-image {
+  border: 4px solid #DDDDDD;
+  border-radius: 50%;
+  display: block;
+  margin: auto;
 }

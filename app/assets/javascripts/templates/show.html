@@ -1,15 +1,18 @@
 <div id="show-page" class="row">
   <div class="alert label right" ng-if="status.dataLoading">LOADING</div>
-  <div class="small-12 medium-3 columns" id="side-panel">
-    <img src="{{ teacherDetails.teacher.avatar_url }}">
-    <h4>{{ teacherDetails.teacher.sortable_name }}</h4>
+  <div class="small-12 medium-3 columns">
+    <img id="profile-image" src="{{ teacherDetails.teacher.avatar_url }}">
+    <p><strong>{{ teacherDetails.teacher.sortable_name }}</strong></p>
     <p>Email: {{ teacherDetails.teacher.email }}</p>
     <p>Days since last accessed Canvas: {{ teacherDetails.days_since_last_access }}</p>
+    <hr>
 
     <p><strong>{{ teacherDetails.selectedCourseCount }}</strong> active, published courses</p>
     <a href="#" data-reveal-id="courseModal">Edit Courses</a>
     <div id="courseModal" class="reveal-modal" data-reveal aria-labelledby="" aria-hidden="true" role="dialog">
-      <ul>
+      <h3>All Active Published Teaching Courses</h3>
+      <p>Only courses that are active, published within Canvas, and list the user as a teacher are included in a teacher's analytics.</p>
+      <ul id="course-selection">
         <li ng-repeat="course in teacherDetails.courses">
           <INPUT type="checkbox" ng-model="course.selected">
           {{course.name}}
@@ -20,7 +23,7 @@
   </div>
 
   <div class="small-12 medium-9 columns">
-    <h3>{{ start_date | date }} to {{ end_date | date }}</h3><a href="#" data-reveal-id="dateRangeModal">Edit Timeframe</a>
+    <h3>{{ start_date | date }} to {{ end_date | date }} <small><a href="#" data-reveal-id="dateRangeModal">Edit Timeframe</a></small></h3>
     <div id="dateRangeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2 id="modalTitle">Edit Timeframe</h2>
       <form>
