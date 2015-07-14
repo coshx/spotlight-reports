@@ -1,6 +1,6 @@
 <div id="show-page" class="row">
   <div class="alert label right" ng-if="status.dataLoading">LOADING</div>
-  <div class="small-12 medium-4 columns">
+  <div class="small-12 medium-3 columns sidebar">
     <img id="profile-image" src="{{ teacherDetails.teacher.avatar_url }}">
     <p><i class="fa fa-user"></i>  <strong>{{ teacherDetails.teacher.sortable_name }}</strong></br>
     <i class="fa fa-envelope-o"></i> {{ teacherDetails.teacher.email }}</br>
@@ -23,8 +23,8 @@
     </div>
   </div>
 
-  <div class="small-12 medium-8 columns">
-    <h4>{{ start_date | date : 'MMMM yyyy' }} to {{ end_date | date : 'MMMM yyyy' }} <small><a href="#" data-reveal-id="dateRangeModal"><i class="fa fa-pencil"></i> Edit Timeframe</a></small></h4>
+  <div class="small-12 medium-9 columns">
+    <h4>{{ start_date | date : 'MMMM yyyy' }} to {{ end_date | date : 'MMMM yyyy' }} <small><a href="#" data-reveal-id="dateRangeModal"><i class="fa fa-pencil"></i> Edit Timeframe</a></small> <a class="button radius tiny right" href="javascript:window.print()"><i class="fa fa-print"></i> Print</a></h4>
     <div id="dateRangeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2 id="modalTitle">Edit Timeframe</h2>
       <form>

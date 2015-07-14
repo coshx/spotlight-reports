@@ -1,6 +1,7 @@
 table {
   width: 100%;
 }
+
 th {
   vertical-align: top;
   text-align: center !important;
@@ -13,6 +14,10 @@ th {
   max-width: 100% !important;
 }
 
+.sidebar {
+  padding-right: 0px !important;
+}
+
 #course-selection {
   list-style: none;
 }
@@ -23,3 +28,5 @@ th {
   display: block;
   margin: auto;
 }
+
+
