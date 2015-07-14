@@ -14,7 +14,6 @@
  *= require foundation/scss/foundation
  *= require foundation/scss/normalize
  *= require foundation-datepicker/stylesheets/foundation-datepicker.css
- *= require font-awesome/css/font-awesome.css
  *= require styles.scss
  *= require_self
  */
