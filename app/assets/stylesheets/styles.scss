@@ -1,7 +1,17 @@
 table {
   width: 100%;
 }
+th {
+  vertical-align: top;
+  text-align: center !important;
+  .stat-name {
+    font-weight: normal;
+  }
+}
 
+.row {
+  max-width: 100% !important;
+}
 
 #course-selection {
   list-style: none;

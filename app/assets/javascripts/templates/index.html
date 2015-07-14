@@ -2,7 +2,7 @@
   <div class="small-12 medium-8 columns">
     <p>The following teachers have at least one published course within Canvas. Click a teacher's name to view aggregated statistics about that teacher's courses.</p>
 
-    <h2>{{school_name}}</h2>
+    <h4><i class="fa fa-university"></i> {{school_name}}</h4>
 
     <input type="search" ng-model="q" placeholder="filter teachers..." aria-label="filter teachers" />
 
@@ -24,3 +24,7 @@
     <dir-pagination-controls></dir-pagination-controls>
   </div>
 </div>
+
+<script>
+  $(document).foundation();
+</script>

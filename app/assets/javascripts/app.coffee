@@ -72,7 +72,9 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
   $scope.status.dataLoading = true
   Teacher.getTeacherDetails($routeParams.id).success (teacherData) ->
     $scope.teacherDetails = (teacherData)
+    $scope.teacherDetails.coursesCount = 0
     for course_id, course_object of $scope.teacherDetails.courses
+      $scope.teacherDetails.coursesCount += 1
       course_object.selected = true
   .then ->
     CourseGraphs.getGraphData($routeParams.id).success (graphData) ->
@@ -106,6 +108,16 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     for course_id, course of $scope.teacherDetails.courses
       count += 1 if course.selected == true
     return count
+
+  $scope.deselectAllCourses = ->
+    for course_id, course_object of $scope.teacherDetails.courses
+      console.log course_object
+      course_object.selected = false
+
+  $scope.selectAllCourses = ->
+    for course_id, course_object of $scope.teacherDetails.courses
+      console.log course_object
+      course_object.selected = true
 
   updateGraphs = ->
     updateDateRange()
