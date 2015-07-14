@@ -111,12 +111,10 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
 
   $scope.deselectAllCourses = ->
     for course_id, course_object of $scope.teacherDetails.courses
-      console.log course_object
       course_object.selected = false
 
   $scope.selectAllCourses = ->
     for course_id, course_object of $scope.teacherDetails.courses
-      console.log course_object
       course_object.selected = true
 
   updateGraphs = ->
