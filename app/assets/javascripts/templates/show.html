@@ -1,14 +1,18 @@
 <div id="show-page" class="row">
-  <div class="alert label right" ng-if="status.dataLoading">LOADING</div>
+
+  <div class="row" ng-if="status.dataLoading">
+    <div class="small-4 small-offset-4 columns warning radius label"><h4 id="data-loading">LOADING</h4></div>
+  </div>
+
   <div class="small-12 medium-3 columns sidebar">
     <img id="profile-image" src="{{ teacherDetails.teacher.avatar_url }}">
     <p><i class="fa fa-user"></i>  <strong>{{ teacherDetails.teacher.sortable_name }}</strong></br>
     <i class="fa fa-envelope-o"></i> {{ teacherDetails.teacher.email }}</br>
     Days since last accessed Canvas: {{ teacherDetails.days_since_last_access }}</p>
     <hr>
-
-    <p><strong>{{ teacherDetails.selectedCourseCount }}</strong> active, published courses</p>
-    <a href="#" data-reveal-id="courseModal"><i class="fa fa-pencil"></i> Edit Courses</a>
+    <p><strong>Data Aggregation</strong></p>
+    <p><strong>{{ teacherDetails.coursesCount }}</strong> published courses, {{ teacherDetails.selectedCourseCount }} selected</br>
+    <a href="#" data-reveal-id="courseModal"><i class="fa fa-pencil"></i> Edit Courses</a><p>
     <div id="courseModal" class="reveal-modal" data-reveal aria-labelledby="" aria-hidden="true" role="dialog">
       <h3>All Active Published Teaching Courses ({{ teacherDetails.coursesCount }})</h3>
       <p>Only courses that are active, published within Canvas, and list the user as a teacher are included in a teacher's analytics.</p>
@@ -24,7 +28,8 @@
   </div>
 
   <div class="small-12 medium-9 columns">
-    <h4>{{ start_date | date : 'MMMM yyyy' }} to {{ end_date | date : 'MMMM yyyy' }} <small><a href="#" data-reveal-id="dateRangeModal"><i class="fa fa-pencil"></i> Edit Timeframe</a></small> <a class="button radius tiny right" href="javascript:window.print()"><i class="fa fa-print"></i> Print</a></h4>
+    <h4>
+      {{ start_date | date : 'MMMM yyyy' }} to {{ end_date | date : 'MMMM yyyy' }} <small><a href="#" data-reveal-id="dateRangeModal"><i class="fa fa-pencil"></i> Edit Timeframe</a></small> <a class="button radius tiny right" href="javascript:window.print()"><i class="fa fa-print"></i> Print</a></h4>
     <div id="dateRangeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2 id="modalTitle">Edit Timeframe</h2>
       <form>
@@ -41,8 +46,8 @@
       </form>
     </div>
 
-    <div class="row">
-      <div class="small-12 columns">
+    <div class="row statgrid">
+      <div class="small-12 columns statgrid">
         <table>
           <thead>
             <tr>
