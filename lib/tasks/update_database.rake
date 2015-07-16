@@ -1,4 +1,4 @@
-task populate_database: :environment do
+task update_database: :environment do
 
   # Authenticate API access
   @client = Pandarus::Client.new(
@@ -78,10 +78,6 @@ task populate_database: :environment do
     student_data
   end
 
-  Account.destroy_all
-  Course.destroy_all
-  Teacher.destroy_all
-
 
   # Get accounts from Canvas
   sub_accounts = @client.get_sub_accounts_of_account(1)
@@ -99,7 +95,7 @@ task populate_database: :environment do
     teachers = []
 
     courses.each do |course|
-      Course.create(
+      new_course = Course.new(
         canvas_id: course.id,
         account_id: course.account_id,
         name: course.name,
@@ -109,8 +105,20 @@ task populate_database: :environment do
         grades: get_grade_changes_by_date(course),
         grades_by_assignment: get_grades(course),
         participation_and_access: get_student_participation_and_access(course)
-        )
-      print '.'
+      )
+
+      old_course = Course.find_by(canvas_id: course.id)
+
+      if old_course.nil?
+        new_course.save
+        puts "Created: " + course.name
+      elsif old_course.attributes.except("id", "updated_at", "created_at") != new_course.attributes.except("id", "updated_at", "created_at")
+        old_course.update_attributes(new_course.attributes.except("id", "created_at", "updated_at"))
+        old_course.save
+        puts "Updated: " + course.name
+      else
+        puts "Unchanged: " + course.name
+      end
 
       teacher_enrollments = @client.list_enrollments_courses(course.id, type:"TeacherEnrollment")
       teachers << teacher_enrollments.map do |teacher|
@@ -128,7 +136,7 @@ task populate_database: :environment do
         teacher_avatar_url = @client.show_user_details(teacher.id).avatar_url
         teacher_email = @client.get_user_profile(teacher.id).primary_email
 
-        Teacher.create(
+        new_teacher = Teacher.new(
           canvas_id: teacher.id,
           name: teacher.name,
           sortable_name: teacher.sortable_name,
@@ -136,7 +144,19 @@ task populate_database: :environment do
           email: teacher_email,
           school_account: sub_account.id
           )
-        print '.'
+
+        old_teacher = Teacher.find_by(canvas_id: teacher.id, school_account: sub_account.id)
+
+        if old_teacher.nil?
+          new_teacher.save
+          puts "Created " + teacher.name
+        elsif old_teacher.attributes.except("id", "updated_at", "created_at") != new_teacher.attributes.except("id", "updated_at", "created_at")
+          old_teacher.update_attributes(new_teacher.attributes.except("id"))
+          old_teacher.save
+          puts "Updated " + teacher.name
+        else
+          puts "Unchanged: " + teacher.name
+        end
       rescue
       end
     end

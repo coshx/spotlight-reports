@@ -1,5 +1,7 @@
 class Course < ActiveRecord::Base
 
+  validates_uniqueness_of :canvas_id
+
   def compile_statgrid_data_single_course
     stats = { "discussions" => self.discussions, "files" => self.files, "assignments" => self.assignments, "gradesEntered" => self.grades }
 
