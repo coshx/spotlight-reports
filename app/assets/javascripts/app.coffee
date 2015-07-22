@@ -158,8 +158,11 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
       for assignment_id, assignment_object of course_object
         assignment_data = JSON.parse(assignment_object.replace(/=>/g, ':'))
         for grade in assignment_data.grades
-          total_grades += 1
-          total_grades_below_seventy += 1 if parseInt(grade) / assignment_data.points_possible < .7
+          if grade.nil?
+            continue
+          else
+            total_grades += 1
+            total_grades_below_seventy += 1 if parseInt(grade) / assignment_data.points_possible < .7
 
     grades_below_seventy_average = Math.round(total_grades_below_seventy/total_grades * 100)
     stats["Student Grades Below 70%"] = grades_below_seventy_average + "%" unless isNaN(grades_below_seventy_average)

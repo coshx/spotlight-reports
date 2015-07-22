@@ -59,7 +59,7 @@ task populate_database: :environment do
     end
     course_grades["events"].each do |grade_event|
       assignment_id = grade_event["links"]["assignment"]
-      grades[assignment_id]["grades"] << grade_event["grade_after"]
+      grades[assignment_id]["grades"] << grade_event["grade_after"] unless grade_event["grade_after"].nil?
     end
     grades
   end
