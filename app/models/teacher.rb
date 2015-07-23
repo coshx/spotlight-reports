@@ -4,10 +4,10 @@ class Teacher < ActiveRecord::Base
     Pandarus::Client.new(prefix: ENV['API_URL'], token: ENV['API_TOKEN'])
   end
 
-  def get_courses
+  def get_courses(school_id)
     enrollments = canvas_api.list_enrollments_users(canvas_id, type:"TeacherEnrollment")
     course_ids = enrollments.map {|enrollment| enrollment.course_id}
-    course_ids.map { |course_id| Course.where(canvas_id: course_id) }.flatten.uniq
+    course_ids.map { |course_id| Course.where(canvas_id: course_id, account_id: school_id) }.flatten.uniq
   end
 
   def get_course_data(courses)
