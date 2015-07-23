@@ -9,7 +9,9 @@
     <p><i class="fa fa-user"></i>  <strong>{{ teacherDetails.teacher.sortable_name }}</strong></br>
     <i class="fa fa-envelope-o"></i> {{ teacherDetails.teacher.email }}</br>
     Days since last accessed Canvas: {{ teacherDetails.days_since_last_access }}</p>
+
     <hr>
+
     <p><strong>Data Aggregation</strong></p>
     <p><strong>{{ teacherDetails.coursesCount }}</strong> published courses, {{ teacherDetails.selectedCourseCount }} selected</br>
     <a href="#" data-reveal-id="courseModal"><i class="fa fa-pencil"></i> Edit Courses</a><p>
@@ -25,6 +27,15 @@
       </ul>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </div>
+
+    <hr>
+
+    <p><strong>Comparison</strong></p>
+    <ul id="comparison-selection">
+      <li>
+        <INPUT type="checkbox"> Average of all teachers at school
+      </li>
+    </ul>
   </div>
 
   <div class="small-12 medium-9 columns">

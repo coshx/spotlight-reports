@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   # Getting data
   get '/school/:id' => 'teachers#get_teachers'
-  get 'teacher_details/:id' => 'teachers#get_teacher_details'
+  get '/teacher_details/:id' => 'teachers#get_teacher_details'
   get '/course_graph_data/:id' => 'teachers#get_course_graph_data'
   get '/course_grid_data/:id' => 'teachers#get_course_grid_data'
   get '/course_student_data/:id' => 'teachers#get_student_grid_data'
