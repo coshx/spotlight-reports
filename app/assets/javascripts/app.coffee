@@ -69,8 +69,8 @@ spotlightReports.factory('GradeData', ['$http', ($http) ->
 
 spotlightReports.factory('SchoolComparison', ['$http', ($http) ->
   schoolComparisonData = {}
-  schoolComparisonData.getSchoolComparisonData = (start_date, end_date) ->
-    $http.post('/school_averages/', {start_date: start_date, end_date: end_date})
+  schoolComparisonData.getSchoolComparisonData = (school_id, start_date, end_date) ->
+    $http.post('/school_averages/', {school_id: school_id, start_date: start_date, end_date: end_date})
   return schoolComparisonData
 ])
 
@@ -164,7 +164,7 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
   getSchoolAverages = ->
     return $scope.statColor = {} if $scope.compareToSchool == false
     $scope.status.comparisonLoading = true
-    SchoolComparison.getSchoolComparisonData($scope.start_date, $scope.end_date).success (comparisonData) ->
+    SchoolComparison.getSchoolComparisonData($scope.teacherDetails.teacher.school_account, $scope.start_date, $scope.end_date).success (comparisonData) ->
       $scope.schoolComparison = comparisonData
     .then ->
       setColors()
