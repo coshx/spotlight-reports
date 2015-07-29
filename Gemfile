@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.1.2'
 gem 'pandarus'
 gem 'ims-lti', '1.1.8'
 gem 'bower-rails'
