@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require foundation/js/foundation
+//= require modernizr/modernizr
 //= require fastclick
 //= require angular/angular
 //= require angular-route/angular-route

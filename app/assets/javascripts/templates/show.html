@@ -33,9 +33,11 @@
     <p><strong>Comparison</strong></p>
     <ul id="comparison-selection">
       <li>
-        <INPUT type="checkbox"> Average of all teachers at school
+        <INPUT type="checkbox" ng-model="compareToSchool"> Average of all teachers at school <span ng-if="status.comparisonLoading" class="warning radius label">LOADING</span>
       </li>
     </ul>
+    <p ng-if="compareToSchool && status.comparisonLoading==false"><span style="color:#f08a24">Below 25% of average</span><br>
+      <span style="color:#f04124">Below 10% of average</span></p>
   </div>
 
   <div class="small-12 medium-9 columns">
@@ -63,7 +65,7 @@
           <thead>
             <tr>
               <th ng-repeat="(statName, stat) in stats">
-                <h5><strong>{{stat}}</strong></h5>
+                <h5 ng-style="statColor['{{statName}}']"><strong>{{stat}}</strong></h5><br>
                 <small class="stat-name">{{statName}}</small>
               </th>
             </tr>

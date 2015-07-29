@@ -67,8 +67,16 @@ spotlightReports.factory('GradeData', ['$http', ($http) ->
   return  gradeData
 ])
 
-controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', 'CourseGraphs', 'GridData', 'GridStudentData', 'GradeData', ($scope, $routeParams, Teacher, CourseGraphs, GridData, GridStudentData, GradeData) ->
+spotlightReports.factory('SchoolComparison', ['$http', ($http) ->
+  schoolComparisonData = {}
+  schoolComparisonData.getSchoolComparisonData = (start_date, end_date) ->
+    $http.post('/school_averages/', {start_date: start_date, end_date: end_date})
+  return schoolComparisonData
+])
+
+controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', 'CourseGraphs', 'GridData', 'GridStudentData', 'GradeData', 'SchoolComparison', ($scope, $routeParams, Teacher, CourseGraphs, GridData, GridStudentData, GradeData, SchoolComparison) ->
   $scope.status = {}
+  $scope.compareToSchool = false
   $scope.status.dataLoading = true
   Teacher.getTeacherDetails($routeParams.id).success (teacherData) ->
     $scope.teacherDetails = (teacherData)
@@ -95,13 +103,75 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.pageViews = addPageViews()
     $scope.participations = addParticipations()
     $scope.stats = addStats()
+    console.log $scope.stats
     $scope.status.dataLoading = false
     $scope.$watchGroup ['start_date', 'end_date'], ->
+      getSchoolAverages() if $scope.compareToSchool == true
       updateGraphs()
+    $scope.$watch 'compareToSchool', ->
+      getSchoolAverages()
     $scope.$watch 'teacherDetails.courses', ->
+      getSchoolAverages() if $scope.compareToSchool == true
       updateGraphs()
       $scope.teacherDetails.selectedCourseCount = countSelectedCourses()
     , true
+
+  setColors = ->
+    $scope.statColor = {}
+    courseCount = countSelectedCourses()
+
+    $scope.statColor['Discussion Posts'] = compareStats($scope.stats['Discussion Posts'], $scope.schoolComparison.discussions_count, courseCount)
+
+    $scope.statColor['Files Uploaded'] = compareStats($scope.stats['Files Uploaded'], $scope.schoolComparison.files_count, courseCount)
+
+    $scope.statColor['Assignments'] = compareStats($scope.stats['Assignments'], $scope.schoolComparison.assignments_count, courseCount)
+
+    $scope.statColor['Grades Entered'] = compareStats($scope.stats['Grades Entered'], $scope.schoolComparison.grades_entered_count, courseCount)
+
+    $scope.statColor['Student Participation'] = compareStats($scope.stats['Student Participation'], $scope.schoolComparison.participation, 1)
+
+    $scope.statColor['Student Access Average'] = compareStats($scope.stats['Student Access Average'], $scope.schoolComparison.access, 1)
+
+    $scope.statColor['Student Grades Below 70%'] = compareGrades($scope.stats['Student Grades Below 70%'], $scope.schoolComparison.grades_below_seventy)
+
+  compareGrades = (grades, schoolAverage) ->
+    colors = {
+      belowTen: {'border': '2px solid #f04124', 'border-radius': '3px'},
+      belowTwentyFive: {'border': '2px solid #f08a24', 'border-radius': '3px'},
+      none: {}
+    }
+    if parseInt(grades) > schoolAverage + (schoolAverage * 0.9)
+      return colors.belowTen
+    else if parseInt(grades) > schoolAverage + (schoolAverage * 0.75)
+      return colors.belowTwentyFive
+    else
+      return colors.none
+
+
+  compareStats = (teacherStat, schoolAverage, courseCount) ->
+    colors = {
+      belowTen: {'border': '2px solid #f04124', 'border-radius': '3px'},
+      belowTwentyFive: {'border': '2px solid #f08a24', 'border-radius': '3px'},
+      none: {}
+    }
+    if parseInt(teacherStat) < (schoolAverage * courseCount) / 10
+      return colors.belowTen
+    else if parseInt(teacherStat) < (schoolAverage * courseCount) / 4
+      return colors.belowTwentyFive
+    else
+      return colors.none
+
+
+  getSchoolAverages = ->
+    return $scope.statColor = {} if $scope.compareToSchool == false
+    console.log 'hi'
+    $scope.status.comparisonLoading = true
+    SchoolComparison.getSchoolComparisonData($scope.start_date, $scope.end_date).success (comparisonData) ->
+      $scope.schoolComparison = comparisonData
+      console.log comparisonData
+    .then ->
+      setColors()
+      $scope.status.comparisonLoading = false
 
   countSelectedCourses = ->
     count = 0
