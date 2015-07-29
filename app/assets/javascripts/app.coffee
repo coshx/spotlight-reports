@@ -103,7 +103,6 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.pageViews = addPageViews()
     $scope.participations = addParticipations()
     $scope.stats = addStats()
-    console.log $scope.stats
     $scope.status.dataLoading = false
     $scope.$watchGroup ['start_date', 'end_date'], ->
       getSchoolAverages() if $scope.compareToSchool == true
@@ -164,11 +163,9 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
 
   getSchoolAverages = ->
     return $scope.statColor = {} if $scope.compareToSchool == false
-    console.log 'hi'
     $scope.status.comparisonLoading = true
     SchoolComparison.getSchoolComparisonData($scope.start_date, $scope.end_date).success (comparisonData) ->
       $scope.schoolComparison = comparisonData
-      console.log comparisonData
     .then ->
       setColors()
       $scope.status.comparisonLoading = false

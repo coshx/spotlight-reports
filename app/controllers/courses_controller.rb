@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
 
-  skip_before_filter :verify_authenticity_token
   before_action :check_login
+  skip_before_filter :verify_authenticity_token
 
   def get_school_averages
     render json: Course.average_stats(session[:school_id], params[:start_date], params[:end_date])
