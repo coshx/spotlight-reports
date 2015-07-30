@@ -93,8 +93,7 @@ class Course < ActiveRecord::Base
     end
     stats_averages = stats.map { |stat, value| [stat, value/course_count] }.to_h
     percent_stats_averages = percent_stats.map { |stat, value| [stat, ((value/students_count)*100).to_i] }.to_h
-
-    grades_count == 0 ? grades_below_seventy_average = {"grades_below_seventy" => 0.0} : grades_below_seventy.map { |stat, value| [stat, ((value/grades_count)*100).to_i ] }.to_h
+    grades_count == 0 ? grades_below_seventy_average = {"grades_below_seventy" => 0.0} : grades_below_seventy_average = grades_below_seventy.map { |stat, value| [stat, ((value/grades_count)*100).to_i ] }.to_h
 
     return stats_averages.merge percent_stats_averages.merge grades_below_seventy_average
   end
