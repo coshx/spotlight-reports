@@ -10,25 +10,25 @@ class TeachersController < ApplicationController
   end
 
   def get_course_graph_data
-    teacher = Teacher.where(canvas_id: params[:id]).first
+    teacher = Teacher.where(canvas_id: params[:id], school_account: session[:school_id]).first
     courses = teacher.get_courses(teacher.school_account)
     render json: teacher.get_course_data(courses)
   end
 
   def get_course_grid_data
-    teacher = Teacher.where(canvas_id: params[:id]).first
+    teacher = Teacher.where(canvas_id: params[:id], school_account: session[:school_id]).first
     courses = teacher.get_courses(teacher.school_account)
     render json: teacher.compile_statgrid_data(courses)
   end
 
   def get_student_grid_data
-    teacher = Teacher.where(canvas_id: params[:id]).first
+    teacher = Teacher.where(canvas_id: params[:id], school_account: session[:school_id]).first
     courses = teacher.get_courses(teacher.school_account)
     render json: teacher.get_student_data(courses)
   end
 
   def get_teacher_details
-    teacher = Teacher.where(canvas_id: params[:id]).first
+    teacher = Teacher.where(canvas_id: params[:id], school_account: session[:school_id]).first
     days_since_last_access = teacher.days_since_last_access
     courses = teacher.get_courses(teacher.school_account)
 
@@ -42,7 +42,7 @@ class TeachersController < ApplicationController
   end
 
   def get_course_grade_data
-    teacher = Teacher.where(canvas_id: params[:id]).first
+    teacher = Teacher.where(canvas_id: params[:id], school_account: session[:school_id]).first
     courses = teacher.get_courses(teacher.school_account)
     render json: teacher.get_grade_data(courses)
   end

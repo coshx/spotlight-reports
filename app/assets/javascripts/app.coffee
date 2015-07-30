@@ -76,7 +76,7 @@ spotlightReports.factory('SchoolComparison', ['$http', ($http) ->
 
 controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher', 'CourseGraphs', 'GridData', 'GridStudentData', 'GradeData', 'SchoolComparison', ($scope, $routeParams, Teacher, CourseGraphs, GridData, GridStudentData, GradeData, SchoolComparison) ->
   $scope.status = {}
-  $scope.compareToSchool = false
+  $scope.comparison = -1
   $scope.status.dataLoading = true
   Teacher.getTeacherDetails($routeParams.id).success (teacherData) ->
     $scope.teacherDetails = (teacherData)
@@ -105,12 +105,10 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
     $scope.stats = addStats()
     $scope.status.dataLoading = false
     $scope.$watchGroup ['start_date', 'end_date'], ->
-      getSchoolAverages() if $scope.compareToSchool == true
+      $scope.getSchoolAverages(parseInt($scope.comparison))
       updateGraphs()
-    $scope.$watch 'compareToSchool', ->
-      getSchoolAverages()
     $scope.$watch 'teacherDetails.courses', ->
-      getSchoolAverages() if $scope.compareToSchool == true
+      $scope.getSchoolAverages(parseInt($scope.comparison))
       updateGraphs()
       $scope.teacherDetails.selectedCourseCount = countSelectedCourses()
     , true
@@ -161,10 +159,10 @@ controllers.controller('TeacherController', [ '$scope', '$routeParams', 'Teacher
       return colors.none
 
 
-  getSchoolAverages = ->
-    return $scope.statColor = {} if $scope.compareToSchool == false
+  $scope.getSchoolAverages = (school_account) ->
+    return if school_account == -1
     $scope.status.comparisonLoading = true
-    SchoolComparison.getSchoolComparisonData($scope.teacherDetails.teacher.school_account, $scope.start_date, $scope.end_date).success (comparisonData) ->
+    SchoolComparison.getSchoolComparisonData(school_account, $scope.start_date, $scope.end_date).success (comparisonData) ->
       $scope.schoolComparison = comparisonData
     .then ->
       setColors()

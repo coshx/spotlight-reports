@@ -21,7 +21,7 @@ class Course < ActiveRecord::Base
   end
 
   def self.average_stats(school_id, start_date, end_date)
-    courses = Course.where(account_id: school_id)
+    school_id == 1 ? courses = Course.all : courses = Course.where(account_id: school_id)
 
     date_range = Date.parse(start_date)..Date.parse(end_date)
 
