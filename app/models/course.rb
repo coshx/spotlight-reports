@@ -44,35 +44,28 @@ class Course < ActiveRecord::Base
     grades_count = 0
 
     courses.each do |course|
-      course.discussions.each do |date, discussions|
-        next if date.empty?
-        if date_range.include?(Date.parse(date))
-          stats["discussions_count"] += discussions.to_i
-        end
-      end
-      course.files.each do |date, files|
-        if date_range.include?(Date.parse(date))
-          stats["files_count"] += files.to_i
-        end
-      end
-      course.assignments.each do |date, assignments|
-        if date_range.include?(Date.parse(date))
-          stats["assignments_count"] += assignments.to_i
-        end
-      end
-      course.grades.each do |date, grades|
-        if date_range.include?(Date.parse(date))
-          stats["grades_entered_count"] += grades.to_i
-        end
-      end
+
+      course.discussions
+      .select { |date, discussions| date_range.include? Date.parse(date) if !date.empty? }
+      .each { |date, discussions| stats["discussions_count"] += discussions.to_i }
+
+      course.files
+      .select { |date, files| date_range.include? Date.parse(date) if !date.empty? }
+      .each { |date, files| stats["files_count"] += files.to_i }
+
+      course.assignments
+      .select { |date, assignments| date_range.include? Date.parse(date) if !date.empty?}
+      .each { |date, assignments| stats["assignments_count"] += assignments.to_i}
+
+      course.grades
+      .select { |date, grades| date_range.include? Date.parse(date) if !date.empty?}
+      .each { |date, grades| stats["grades_entered_count"] += grades.to_i}
 
       course.participation_and_access.each do |student, data|
         parsed_data = JSON.parse(data.gsub('=>',':'))
         students_count += 1
-        parsed_data["participations"]
-        percent_stats["participation"] += 1 if (date_range.to_a - parsed_data["participations"].map{|date| Date.parse(date)}).count < date_range.count
-        parsed_data["page_views"]
-        percent_stats["access"] += 1 if (date_range.to_a - parsed_data["page_views"].map{|date| Date.parse(date)}).count < date_range.count
+        percent_stats["participation"] += 1 if parsed_data["participations"].detect{|date| date_range.include? Date.parse(date)} unless parsed_data["participations"].nil?
+        percent_stats["access"] += 1 if parsed_data["page_views"].detect{|date| date_range.include? Date.parse(date)} unless parsed_data["page_views"].nil?
       end
 
       course.grades_by_assignment.each do |assignment, data|
@@ -90,7 +83,9 @@ class Course < ActiveRecord::Base
           grades_below_seventy["grades_below_seventy"] += 1 if grade.to_f/parsed_data["points_possible"].to_f < 0.7
         end
       end
+
     end
+
     stats_averages = stats.map { |stat, value| [stat, value/course_count] }.to_h
     percent_stats_averages = percent_stats.map { |stat, value| [stat, ((value/students_count)*100).to_i] }.to_h
     grades_count == 0 ? grades_below_seventy_average = {"grades_below_seventy" => 0.0} : grades_below_seventy_average = grades_below_seventy.map { |stat, value| [stat, ((value/grades_count)*100).to_i ] }.to_h
