@@ -50,7 +50,7 @@ In your Canvas instance do the following:
 * In the Configuration Type drop down, select "By URL"
 * Type in the name: Spotlight Reports
 * Paste in the Consumer key and Shared Secret that you created for canvas.yml
-* Paste the URL for the Configuration XML. For example: "https://localhost:3000/config_xml" or "https://******.ngrok.com/config_xml"
+* Paste the URL for the Configuration XML. For example: "https://localhost:3000/tool_config.xml" or "https://******.ngrok.com/tool_config.xml"
 * Click Submit
 
 You should be told the app was successfully added. Refresh the page again and you will see "Spotlight Reports" added to the left-hand nav.
