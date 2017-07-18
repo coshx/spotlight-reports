@@ -8,7 +8,9 @@ task populate_database: :environment do
   def get_discussions_posted_by_date(canvas_course_object)
     discussions_list = @client.list_discussion_topics_courses(canvas_course_object.id)
     dates = []
-    discussions_list.each { |discussion| dates << discussion.posted_at.to_s[0..9] }
+    if discussion_list
+      discussions_list.each { |discussion| dates << discussion.posted_at.to_s[0..9] }
+    end
     discussions_by_date = Hash.new(0)
     dates.each do |date|
       discussions_by_date[date] += 1
@@ -19,7 +21,9 @@ task populate_database: :environment do
   def get_files_uploaded_by_date(canvas_course_object)
     file_list = @client.list_files_courses(canvas_course_object.id)
     dates = []
-    file_list.each { |file| dates << file.created_at.to_s[0..9] }
+    if file_list
+      file_list.each { |file| dates << file.created_at.to_s[0..9] }
+    end
     files_by_date = Hash.new(0)
     dates.each do |date|
       files_by_date[date] += 1
@@ -30,7 +34,10 @@ task populate_database: :environment do
   def get_assignments_created_by_date(canvas_course_object)
     assignment_list = @client.list_assignments(canvas_course_object.id)
     dates = []
-    assignment_list.each { |assignment| dates << assignment.created_at.to_s[0..9] }
+
+    if assignment_list
+      assignment_list.each { |assignment| dates << assignment.created_at.to_s[0..9] }
+    end
     assignments_by_date = Hash.new(0)
     dates.each do |date|
       assignments_by_date[date] += 1
@@ -41,7 +48,9 @@ task populate_database: :environment do
   def get_grade_changes_by_date(canvas_course_object)
     grade_change_list = HTTParty.get(ENV['API_URL'] + "/v1/audit/grade_change/courses/" + canvas_course_object.id.to_s + "?access_token=" + ENV['API_TOKEN'])["events"]
     dates = []
-    grade_change_list.each { |grade_change| dates << grade_change["created_at"].to_s[0..9] }
+    if grade_change_list
+      grade_change_list.each { |grade_change| dates << grade_change["created_at"].to_s[0..9] }
+    end
     grade_changes_by_date = Hash.new(0)
     dates.each do |date|
       grade_changes_by_date[date] += 1
@@ -52,14 +61,20 @@ task populate_database: :environment do
   def get_grades(canvas_course_object)
     grades = Hash.new(0)
     course_grades = HTTParty.get(ENV['API_URL'] + "/v1/audit/grade_change/courses/" + canvas_course_object.id.to_s + "?access_token=" + ENV['API_TOKEN'])
-    course_grades["linked"]["assignments"].each do |assignment|
-      id = assignment["id"]
-      grades[id] = {"points_possible"=> 0, "grades"=> []}
-      grades[id]["points_possible"] = assignment["points_possible"]
-    end
-    course_grades["events"].each do |grade_event|
-      assignment_id = grade_event["links"]["assignment"]
-      grades[assignment_id]["grades"] << grade_event["grade_after"] unless grade_event["grade_after"].nil?
+    if course_grades
+      if course_grades["linked"] && course_grades["linked"]["assignments"]
+        course_grades["linked"]["assignments"].each do |assignment|
+          id = assignment["id"]
+          grades[id] = {"points_possible"=> 0, "grades"=> []}
+          grades[id]["points_possible"] = assignment["points_possible"]
+        end
+      end
+      if course_grades["events"]
+        course_grades["events"].each do |grade_event|
+          assignment_id = grade_event["links"]["assignment"]
+          grades[assignment_id]["grades"] << grade_event["grade_after"] unless grade_event["grade_after"].nil?
+        end
+      end
     end
     grades
   end
