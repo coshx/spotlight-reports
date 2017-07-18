@@ -13,7 +13,11 @@ It offers a way to view stats about the instructors within a sub-account.
     1. Copy the access token that's generated. This will be your `API_TOKEN`.
 1. Use the button above to deploy Spotlight Reports to Heroku.
     1. Set the Environment variables that are being requested. 
-    1. For `OAUTH_KEY` and `OAUTH_SECRET`, you can keep the random ones generated.
+    1. For `OAUTH_KEY` and `OAUTH_SECRET`, we'll let Heroku generate random ones.
+1. Grab the `OAUTH_KEY` and `OAUTH_SECRET` for the next step
+    1. Navigate to https://heroku.com/apps
+    1. Select the app you created
+    1. Go to _Settings_ and _Reveal Config Vars_
 1. Add Spotlight Reports to your Canvas installation
     1. Switch to Admin View in canvas if you're not already there
     1. Navigate to Admin -> _Main Account_ -> Settings (`/accounts/1/settings`)

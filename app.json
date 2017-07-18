@@ -23,7 +23,7 @@
       "generator": "secret"
     },
     "API_URL": {
-      "description": "The API endpoint for your canvas instance, e.g. https://canvas.instructure.com/api/v1"
+      "description": "The URL of your canvas instance, e.g. https://<your-school>.instructure.com"
     },
     "API_TOKEN": {
       "description": "The API Token you saved (Account => Settings => New Access Token)"
