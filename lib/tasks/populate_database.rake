@@ -8,7 +8,7 @@ task populate_database: :environment do
   def get_discussions_posted_by_date(canvas_course_object)
     discussions_list = @client.list_discussion_topics_courses(canvas_course_object.id)
     dates = []
-    if discussion_list
+    if discussions_list
       discussions_list.each { |discussion| dates << discussion.posted_at.to_s[0..9] }
     end
     discussions_by_date = Hash.new(0)
