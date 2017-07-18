@@ -13,12 +13,22 @@
     }
   ],
   "scripts": {
-    "postdeploy": "bundle exec rake populate_database"
+    "postdeploy": "bundle exec rake db:migrate && bundle exec rake populate_database"
   },
   "env": {
-    "OAUTH_KEY": "<generate a long random string>",
-    "OAUTH_SECRET": "<generate a long random string>",
-    "API_URL": "<get this from your canvas instance API>",
-    "API_TOKEN": "<when you set up API access you got this>"
+    "OAUTH_KEY": {
+      "description": "A key you'll enter when adding this to Canvas",
+      "generator": "secret"
+    },
+    "OAUTH_SECRET": {
+      "description": "A shared secret you'll need when adding this to Canvas",
+      "generator": "secret"
+    },
+    "API_URL": {
+      "description": "The API endpoint for your canvas instance, e.g. https://canvas.instructure.com/api/v1"
+    }
+    "API_TOKEN": {
+      "description": "The API Token you saved (Account => Settings => New Access Token)"
+    }
   }
 }

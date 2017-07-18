@@ -12,7 +12,8 @@ It offers a way to view stats about the instructors within a sub-account.
     1. Go to your canvas installation, navigate to Account -> Settings (`/profile/settings`) and add a **New Access Token**
     1. Copy the access token that's generated. This will be your `API_TOKEN`.
 1. Use the button above to deploy Spotlight Reports to Heroku.
-    1. For the environment variables, you can make up strings for `OAUTH_KEY` and `OAUTH_SECRET`. 
+    1. Set the Environment variables that are being requested. 
+    1. For `OAUTH_KEY` and `OAUTH_SECRET`, you can keep the random ones generated.
 1. Add Spotlight Reports to your Canvas installation
     1. Switch to Admin View in canvas if you're not already there
     1. Navigate to Admin -> _Main Account_ -> Settings (`/accounts/1/settings`)
