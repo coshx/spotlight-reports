@@ -26,7 +26,10 @@ It offers a way to view stats about the instructors within a sub-account.
     1. Under `Configuration Type`, select `By URL`
     1. Type _Spotlight Reports_ for the Name
     1. Enter the `OAUTH_KEY` and `OAUTH_SECRET` you made up previously for the _Consumer Key_ and _Shared Secret_, resepectively
-    1. For the `Config URL`, enter `http://my-app.herokuapp.com/tool_config.xml` (replacying my-app with the name of your heroku instance).
+    1. For the `Config URL`, enter `https://my-app.herokuapp.com/tool_config.xml` (replacing my-app with the name of your heroku instance).
+    1. Submit, refresh the page, and you should see *Spotlight Reports* listed as an Admin Tool (but it won't have data for the main account)
+    1. Go to Sub Accounts and select a School
+    1. Go to Spotlight Reports and view a report
 1. To keep the data up-to-date, add a nightly data import
     1. Go to https://heroku.com/apps
     1. Select the app you created
