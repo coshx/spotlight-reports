@@ -1,0 +1,24 @@
+{
+  "name": "Spotlight Reports for Canvas",
+  "description": "Spotlight Reports allows you to view stats about instructors within a sub-account",
+  "keywords": [
+    "canvas",
+    "spotlight",
+    "reports"
+  ],
+  "addons": [
+    "heroku-postgresql",
+    {
+      "plan": "scheduler:standard",
+    }
+  ],
+  "scripts": {
+    "postdeploy": "bundle exec rake populate_database"
+  },
+  "env": {
+    "OAUTH_KEY": "<generate a long random string>",
+    "OAUTH_SECRET": "<generate a long random string>",
+    "API_URL": "<get this from your canvas instance API>",
+    "API_TOKEN": "<when you set up API access you got this>"
+  }
+}

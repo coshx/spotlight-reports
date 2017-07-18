@@ -4,6 +4,31 @@ Spotlight Reports is a tool provider for Instructure's [Canvas](https://github.c
 
 It offers a way to view stats about the instructors within a sub-account.
 
+## Deployment
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+1. Generate an API Token from Canvas
+   a. Go to your canvas installation, navigate to Account -> Settings (`/profile/settings`) and add a **New Access Token**
+   a. Copy the access token that's generated. This will be your `API_TOKEN`.
+1. Use the button above to deploy Spotlight Reports to Heroku.
+   a. For the environment variables, you can make up strings for `OAUTH_KEY` and `OAUTH_SECRET`. 
+1. Add Spotlight Reports to your Canvas installation
+   a. Switch to Admin View in canvas if you're not already there
+   a. Navigate to Admin -> _Main Account_ -> Settings (`/accounts/1/settings`)
+   a. Go to the `Apps` tab
+   a. Add a New App
+   a. Under `Configuration Type`, select `By URL`
+   a. Type _Spotlight Reports_ for the Name
+   a. Enter the `OAUTH_KEY` and `OAUTH_SECRET` you made up previously for the _Consumer Key_ and _Shared Secret_, resepectively
+   a. For the `Config URL`, enter `http://my-app.herokuapp.com/tool_config.xml` (replacying my-app with the name of your heroku instance).
+1. To keep the data up-to-date, add a nightly data import
+   a. Go to https://heroku.com/apps
+   a. Select the app you created
+   a. Go to **Resources**
+   a. Select the **Scheduler** app
+   a. Schedule a task to run each night with the command `bundle exec rake update_database` - this is the nightly database update. Feel free to schedule more or less frequently.
+
 ## Development
 
 ### Step 1
@@ -63,5 +88,3 @@ rake populate_database
 
 Once all those steps are done, you should be able to go to a sub-account, click Spotlight Reports, and see a list of teachers with published courses.
 
-## Deployment
-You can deploy this on Heroku pretty easily. Just add the contents of `canvas.yml` as environment variables. Run the `populate_database` task upon initial deployment and use Heroku Scheduler to run `update_database` each night.
