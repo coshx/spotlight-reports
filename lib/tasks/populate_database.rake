@@ -135,7 +135,7 @@ task populate_database: :environment do
 
     puts ''
 
-    teachers.flatten!.uniq!{|t| t.id}
+    teachers.flatten.uniq!{|t| t.id}
 
     puts 'Getting Teachers'
     teachers.each do |teacher|
