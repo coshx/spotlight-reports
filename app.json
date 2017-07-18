@@ -8,9 +8,7 @@
   ],
   "addons": [
     "heroku-postgresql",
-    {
-      "plan": "scheduler:standard",
-    }
+    "scheduler:standard"
   ],
   "scripts": {
     "postdeploy": "bundle exec rake db:migrate && bundle exec rake populate_database"
@@ -26,7 +24,7 @@
     },
     "API_URL": {
       "description": "The API endpoint for your canvas instance, e.g. https://canvas.instructure.com/api/v1"
-    }
+    },
     "API_TOKEN": {
       "description": "The API Token you saved (Account => Settings => New Access Token)"
     }
