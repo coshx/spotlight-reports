@@ -9,25 +9,25 @@ It offers a way to view stats about the instructors within a sub-account.
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 1. Generate an API Token from Canvas
-    i. Go to your canvas installation, navigate to Account -> Settings (`/profile/settings`) and add a **New Access Token**
-    i. Copy the access token that's generated. This will be your `API_TOKEN`.
+    1. Go to your canvas installation, navigate to Account -> Settings (`/profile/settings`) and add a **New Access Token**
+    1. Copy the access token that's generated. This will be your `API_TOKEN`.
 1. Use the button above to deploy Spotlight Reports to Heroku.
-    i. For the environment variables, you can make up strings for `OAUTH_KEY` and `OAUTH_SECRET`. 
+    1. For the environment variables, you can make up strings for `OAUTH_KEY` and `OAUTH_SECRET`. 
 1. Add Spotlight Reports to your Canvas installation
-    i. Switch to Admin View in canvas if you're not already there
-    i. Navigate to Admin -> _Main Account_ -> Settings (`/accounts/1/settings`)
-    i. Go to the `Apps` tab
-    i. Add a New App
-    i. Under `Configuration Type`, select `By URL`
-    i. Type _Spotlight Reports_ for the Name
-    i. Enter the `OAUTH_KEY` and `OAUTH_SECRET` you made up previously for the _Consumer Key_ and _Shared Secret_, resepectively
-    i. For the `Config URL`, enter `http://my-app.herokuapp.com/tool_config.xml` (replacying my-app with the name of your heroku instance).
+    1. Switch to Admin View in canvas if you're not already there
+    1. Navigate to Admin -> _Main Account_ -> Settings (`/accounts/1/settings`)
+    1. Go to the `Apps` tab
+    1. Add a New App
+    1. Under `Configuration Type`, select `By URL`
+    1. Type _Spotlight Reports_ for the Name
+    1. Enter the `OAUTH_KEY` and `OAUTH_SECRET` you made up previously for the _Consumer Key_ and _Shared Secret_, resepectively
+    1. For the `Config URL`, enter `http://my-app.herokuapp.com/tool_config.xml` (replacying my-app with the name of your heroku instance).
 1. To keep the data up-to-date, add a nightly data import
-    i. Go to https://heroku.com/apps
-    i. Select the app you created
-    i. Go to **Resources**
-    i. Select the **Scheduler** app
-    i. Schedule a task to run each night with the command `bundle exec rake update_database` - this is the nightly database update. Feel free to schedule more or less frequently.
+    1. Go to https://heroku.com/apps
+    1. Select the app you created
+    1. Go to **Resources**
+    1. Select the **Scheduler** app
+    1. Schedule a task to run each night with the command `bundle exec rake update_database` - this is the nightly database update. Feel free to schedule more or less frequently.
 
 ## Development
 
