@@ -52,14 +52,17 @@ task update_database: :environment do
   def get_grades(canvas_course_object)
     grades = Hash.new(0)
     course_grades = HTTParty.get(ENV['API_URL'] + "/v1/audit/grade_change/courses/" + canvas_course_object.id.to_s + "?access_token=" + ENV['API_TOKEN'])
-    course_grades["linked"]["assignments"].each do |assignment|
-      id = assignment["id"]
-      grades[id] = {"points_possible"=> 0, "grades"=> []}
-      grades[id]["points_possible"] = assignment["points_possible"]
-    end
-    course_grades["events"].each do |grade_event|
-      assignment_id = grade_event["links"]["assignment"]
-      grades[assignment_id]["grades"] << grade_event["grade_after"] unless grade_event["grade_after"].nil?
+    if course_grades["linked"] && course_grades["linked"]["assignments"]
+      course_grades["linked"]["assignments"].each do |assignment|
+        id = assignment["id"]
+        grades[id] = {"points_possible"=> 0, "grades"=> []}
+        grades[id]["points_possible"] = assignment["points_possible"]
+      end
+    
+      course_grades["events"].each do |grade_event|
+        assignment_id = grade_event["links"]["assignment"]
+        grades[assignment_id]["grades"] << grade_event["grade_after"] unless grade_event["grade_after"].nil?
+      end
     end
     grades
   end
