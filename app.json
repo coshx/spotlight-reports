@@ -27,6 +27,12 @@
     },
     "API_TOKEN": {
       "description": "The API Token you saved (Account => Settings => New Access Token)"
+    },
+    "TERM_FILTER": {
+      "description": "[optional] Comma seperated list of Term Id's to filter out."
+    },
+    "COURSE_FILTER": {
+      "description": "[optional] Comma seperated list of Course Id's to filter out."
     }
   }
 }
