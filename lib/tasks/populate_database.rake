@@ -4,6 +4,18 @@ task populate_database: :environment do
   @client = Pandarus::Client.new(
     prefix: ENV['API_URL'],
     token: ENV['API_TOKEN'])
+  
+  if ENV['TERM_FILTER']
+    @term_filter_ids = ENV['TERM_FILTER'].split(',').map { |id| id.strip().to_i }
+  else
+    @term_filter_ids = []
+  end
+  
+  if ENV['COURSE_FILTER']
+    @course_filter_ids = ENV['COURSE_FILTER'].split(',').map { |id| id.strip().to_i }
+  else
+    @course_filter_ids = []
+  end
 
   def get_discussions_posted_by_date(canvas_course_object)
     discussions_list = @client.list_discussion_topics_courses(canvas_course_object.id)
@@ -107,7 +119,9 @@ task populate_database: :environment do
     puts 'Getting Courses'
 
     begin
-      courses = @client.list_active_courses_in_account(sub_account.id, with_enrollments:"true", published:"true")
+      all_courses = @client.list_active_courses_in_account(sub_account.id, with_enrollments:"true", published:"true")
+      filtered_courses = all_courses.select { |course| !@course_filter_ids.include? course.id }.select { |course| !@term_filter_ids.include? course.enrollment_term_id }
+      courses = filtered_courses
     rescue
     end
 
