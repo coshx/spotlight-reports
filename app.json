@@ -30,11 +30,11 @@
     },
     "TERM_FILTER": {
       "description": "[optional] Comma seperated list of Term Id's to filter out.",
-      "required": "false"
+      "required": false
     },
     "COURSE_FILTER": {
       "description": "[optional] Comma seperated list of Course Id's to filter out.",
-      "required": "false"
+      "required": false
     }
   }
 }
