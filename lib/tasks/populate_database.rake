@@ -119,34 +119,32 @@ task populate_database: :environment do
     puts 'Getting Courses'
 
     begin
-      all_courses = @client.list_active_courses_in_account(sub_account.id, with_enrollments:"true", published:"true")
-      filtered_courses = all_courses.select { |course| !@course_filter_ids.include? course.id }.select { |course| !@term_filter_ids.include? course.enrollment_term_id }
-      courses = filtered_courses
+      courses = @client.list_active_courses_in_account(sub_account.id, with_enrollments:"true", published:"true")
     rescue
     end
 
     teachers = []
-    
-    throw all_courses
 
     courses.each do |course|
-      Course.create(
-        canvas_id: course.id,
-        account_id: course.account_id,
-        name: course.name,
-        discussions: get_discussions_posted_by_date(course),
-        files: get_files_uploaded_by_date(course),
-        assignments: get_assignments_created_by_date(course),
-        grades: get_grade_changes_by_date(course),
-        grades_by_assignment: get_grades(course),
-        participation_and_access: get_student_participation_and_access(course)
-        )
-      print '.'
+      if (!@course_filter_ids.include? course.id) && (!@term_filter_ids.include? course.enrollment_term_id) 
+        Course.create(
+          canvas_id: course.id,
+          account_id: course.account_id,
+          name: course.name,
+          discussions: get_discussions_posted_by_date(course),
+          files: get_files_uploaded_by_date(course),
+          assignments: get_assignments_created_by_date(course),
+          grades: get_grade_changes_by_date(course),
+          grades_by_assignment: get_grades(course),
+          participation_and_access: get_student_participation_and_access(course)
+          )
+        print '.'
 
-      teacher_enrollments = @client.list_enrollments_courses(course.id, type:"TeacherEnrollment")
-      teachers << teacher_enrollments.map do |teacher|
-        teacher.user
-      end
+        teacher_enrollments = @client.list_enrollments_courses(course.id, type:"TeacherEnrollment")
+        teachers << teacher_enrollments.map do |teacher|
+          teacher.user
+        end
+      end  
     end
 
     puts ''
