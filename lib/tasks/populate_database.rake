@@ -127,7 +127,7 @@ task populate_database: :environment do
 
     teachers = []
     
-    throw courses.inspect
+    throw all_courses
 
     courses.each do |course|
       Course.create(
