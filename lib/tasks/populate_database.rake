@@ -126,9 +126,9 @@ task populate_database: :environment do
     teachers = []
     
     courses.each do |course|
-      puts 'COURSE:'
-      puts course.inspect
       if (!@course_filter_ids.include? course.id) && (!@term_filter_ids.include? course.enrollment_term_id) 
+        puts 'COURSE:'
+        puts course.inspect
         Course.create(
           canvas_id: course.id,
           account_id: course.account_id,
