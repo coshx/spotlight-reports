@@ -126,9 +126,10 @@ task populate_database: :environment do
     end
 
     teachers = []
+    
+    throw courses.inspect
 
     courses.each do |course|
-      puts course.inspect
       Course.create(
         canvas_id: course.id,
         account_id: course.account_id,
