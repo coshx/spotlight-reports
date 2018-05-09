@@ -24,7 +24,7 @@ task populate_database: :environment do
   end
   
   if ENV['INCLUDE_COMPLETED_COURSES']
-    if ENV['INCLUDE_COMPLETED_COURSES'] == 'false'
+    if (ENV['INCLUDE_COMPLETED_COURSES'] == 'false') || ENV['INCLUDE_COMPLETED_COURSES'] == 'False'
       @include_completed_courses = false
     else
       @include_completed_courses = true
