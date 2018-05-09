@@ -29,11 +29,19 @@
       "description": "The API Token you saved (Account => Settings => New Access Token)"
     },
     "TERM_FILTER": {
-      "description": "[optional] Comma seperated list of Term Id's to filter out.",
+      "description": "[optional] Comma seperated list of Term Ids to filter out.",
       "required": false
     },
     "COURSE_FILTER": {
-      "description": "[optional] Comma seperated list of Course Id's to filter out.",
+      "description": "[optional] Comma seperated list of Course Ids to filter out.",
+      "required": false
+    },
+    "ACCOUNT_FILTER": {
+      "description": "[optional] Comma seperated list of Account Ids to filter out.",
+      "required": false
+    },
+    "INCLUDE_COMPLETED_COURSES": {
+      "description": "[optional] true (include completed courses) or false (do not include completed courses)",
       "required": false
     }
   }
