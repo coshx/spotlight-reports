@@ -16,6 +16,22 @@ task populate_database: :environment do
   else
     @course_filter_ids = []
   end
+  
+  if ENV['ACCOUNT_FILTER']
+    @account_filter_ids = ENV['ACCOUNT_FILTER'].split(',').map { |id| id.strip().to_i }
+  else
+    @account_filter_ids = []
+  end
+  
+  if ENV['INCLUDE_COMPLETED_COURSES']
+    if ENV['INCLUDE_COMPLETED_COURSES'] == 'false'
+      @include_completed_courses = false
+    else
+      @include_completed_courses = true
+    end
+  else
+    @include_completed_courses = true
+  end
 
   def get_discussions_posted_by_date(canvas_course_object)
     discussions_list = @client.list_discussion_topics_courses(canvas_course_object.id)
@@ -113,62 +129,67 @@ task populate_database: :environment do
   # Get accounts from Canvas
   sub_accounts = @client.get_sub_accounts_of_account(1)
   sub_accounts.each do |sub_account|
+    if !@account_filter_ids.include? sub_account.id
+      puts "\nGetting Account: " + sub_account.name
 
-    puts "\nGetting Account: " + sub_account.name
+      puts 'Getting Courses'
 
-    puts 'Getting Courses'
-
-    begin
-      courses = @client.list_active_courses_in_account(sub_account.id, with_enrollments:"true", published:"true")
-    rescue
-    end
-
-    teachers = []
-    
-    courses.each do |course|
-      if (!@course_filter_ids.include? course.id) && (!@term_filter_ids.include? course.enrollment_term_id) 
-        puts 'COURSE:'
-        puts course.inspect
-        Course.create(
-          canvas_id: course.id,
-          account_id: course.account_id,
-          name: course.name,
-          discussions: get_discussions_posted_by_date(course),
-          files: get_files_uploaded_by_date(course),
-          assignments: get_assignments_created_by_date(course),
-          grades: get_grade_changes_by_date(course),
-          grades_by_assignment: get_grades(course),
-          participation_and_access: get_student_participation_and_access(course)
-          )
-        print '.'
-
-        teacher_enrollments = @client.list_enrollments_courses(course.id, type:"TeacherEnrollment")
-        teachers << teacher_enrollments.map do |teacher|
-          teacher.user
-        end
-      end  
-    end
-
-    puts ''
-
-    teachers.flatten.uniq!{|t| t.id}
-
-    puts 'Getting Teachers'
-    teachers.each do |teacher|
       begin
-        teacher_avatar_url = @client.show_user_details(teacher.id).avatar_url
-        teacher_email = @client.get_user_profile(teacher.id).primary_email
-
-        Teacher.create(
-          canvas_id: teacher.id,
-          name: teacher.name,
-          sortable_name: teacher.sortable_name,
-          avatar_url: teacher_avatar_url,
-          email: teacher_email,
-          school_account: sub_account.id
-          )
-        print '.'
+        if @include_completed_courses
+          courses = @client.list_active_courses_in_account(sub_account.id, with_enrollments:"true", published:"true")
+        else
+          courses = @client.list_active_courses_in_account(sub_account.id, with_enrollments:"true", published:"true", completed:"false")
+        end
       rescue
+      end
+
+      teachers = []
+
+      courses.each do |course|
+        if (!@course_filter_ids.include? course.id) && (!@term_filter_ids.include? course.enrollment_term_id) 
+          puts 'COURSE:'
+          puts course.inspect
+          Course.create(
+            canvas_id: course.id,
+            account_id: course.account_id,
+            name: course.name,
+            discussions: get_discussions_posted_by_date(course),
+            files: get_files_uploaded_by_date(course),
+            assignments: get_assignments_created_by_date(course),
+            grades: get_grade_changes_by_date(course),
+            grades_by_assignment: get_grades(course),
+            participation_and_access: get_student_participation_and_access(course)
+            )
+          print '.'
+
+          teacher_enrollments = @client.list_enrollments_courses(course.id, type:"TeacherEnrollment")
+          teachers << teacher_enrollments.map do |teacher|
+            teacher.user
+          end
+        end  
+      end
+
+      puts ''
+
+      teachers.flatten.uniq!{|t| t.id}
+
+      puts 'Getting Teachers'
+      teachers.each do |teacher|
+        begin
+          teacher_avatar_url = @client.show_user_details(teacher.id).avatar_url
+          teacher_email = @client.get_user_profile(teacher.id).primary_email
+
+          Teacher.create(
+            canvas_id: teacher.id,
+            name: teacher.name,
+            sortable_name: teacher.sortable_name,
+            avatar_url: teacher_avatar_url,
+            email: teacher_email,
+            school_account: sub_account.id
+            )
+          print '.'
+        rescue
+        end
       end
     end
     puts ''
